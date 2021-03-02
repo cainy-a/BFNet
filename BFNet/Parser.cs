@@ -7,9 +7,15 @@ namespace BFNet
 {
 	public static class Parser
 	{
-		public static HierarchyRoot ParseFullHierarchy(this string input) { throw new NotImplementedException(); }
+		public static HierarchyRoot ParseFullHierarchy(this string input)
+		{
+			var rawParsed = input.Parse();
+			var expanded  = rawParsed.ExpandHierarchy();
 
-		private static HierarchyRoot Parse(this string input) => new()
+			return expanded;
+		}
+
+		public static HierarchyRoot Parse(this string input) => new()
 		{
 			// LINQ go brrr
 			Hierarchy = input
@@ -25,8 +31,9 @@ namespace BFNet
 			{
 				var hierarchyObject = hierarchy.Hierarchy[i];
 
-				if (((Instruction) hierarchyObject).Operation == Operations.StartLoop)
-					tree.Add(new Loop {HierarchyChildren = ExpandLoopContentRecursive(ref i, ref tree, ref hierarchy)});
+				tree.Add(((Instruction) hierarchyObject).Operation == Operations.StartLoop
+							 ? new Loop {HierarchyChildren = ExpandLoopContentRecursive(ref i, ref tree, ref hierarchy)}
+							 : hierarchyObject);
 			}
 
 			return new HierarchyRoot {Hierarchy = tree.ToArray()};
@@ -35,10 +42,9 @@ namespace BFNet
 		private static HierarchyObject[] ExpandLoopContentRecursive(ref int i, ref List<HierarchyObject> tree, ref HierarchyRoot root)
 		{
 			var loopContent = new List<HierarchyObject>();
-			var oldIndex    = i;
 			while (true)
 			{
-				var currentInstruction = (Instruction) root.Hierarchy[i];
+				var currentInstruction = (Instruction) root.Hierarchy[++i];
 
 				if (currentInstruction.Operation == Operations.StartLoop)
 					loopContent.Add(new Loop
@@ -49,8 +55,6 @@ namespace BFNet
 				if (currentInstruction.Operation == Operations.EndLoop) break;
 				loopContent.Add(currentInstruction);
 			}
-
-			i = oldIndex;
 			return loopContent.ToArray();
 		}
 

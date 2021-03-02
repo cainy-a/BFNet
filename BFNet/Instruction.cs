@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace BFNet
 {
+	[DebuggerDisplay("{Operation.ToString()}")]
 	public class Instruction : HierarchyObject
 	{
 		public static readonly Dictionary<char, Operations> InstructionLookupTable = new()
@@ -18,6 +20,12 @@ namespace BFNet
 		public static Operations GetOperation(char character) => InstructionLookupTable[character];
 
 		public Operations Operation;
+
+		public override bool Equals(object? obj) => obj is Instruction casted && Operation.Equals(casted.Operation);
+
+		protected bool Equals(Instruction other) => Equals(this, other);
+
+		public override int GetHashCode() => (int) Operation;
 	}
 
 	public enum Operations
