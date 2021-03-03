@@ -26,20 +26,17 @@ namespace BFNet
 
 		private static HierarchyRoot ExpandHierarchy(this HierarchyRoot hierarchy)
 		{
-			var tree = new List<HierarchyObject>();
-			for (var i = 0; i < hierarchy.Hierarchy.Length; i++)
+			return new()
 			{
-				var hierarchyObject = hierarchy.Hierarchy[i];
-
-				tree.Add(((Instruction) hierarchyObject).Operation == Operations.StartLoop
-							 ? new Loop {HierarchyChildren = ExpandLoopContentRecursive(ref i, ref tree, ref hierarchy)}
-							 : hierarchyObject);
-			}
-
-			return new HierarchyRoot {Hierarchy = tree.ToArray()};
+				Hierarchy = hierarchy.Hierarchy
+									 .Select((hierarchyObject, i) => // for each item in the hierarchy
+                                          ((Instruction) hierarchyObject).Operation == Operations.StartLoop // is it a loop start? 
+															   ? new Loop {HierarchyChildren = ExpandLoopContentRecursive(ref i, ref hierarchy)} // Expand the loop (recursively!)
+															   : hierarchyObject).ToArray() // Else just copy it untouched
+			};
 		}
 
-		private static HierarchyObject[] ExpandLoopContentRecursive(ref int i, ref List<HierarchyObject> tree, ref HierarchyRoot root)
+		private static HierarchyObject[] ExpandLoopContentRecursive(ref int i, ref HierarchyRoot root)
 		{
 			var loopContent = new List<HierarchyObject>();
 			while (true)
@@ -50,7 +47,7 @@ namespace BFNet
 				{
 					loopContent.Add(new Loop
 					{
-						HierarchyChildren = ExpandLoopContentRecursive(ref i, ref tree, ref root)
+						HierarchyChildren = ExpandLoopContentRecursive(ref i, ref root)
 					});
 					continue;
 				}
