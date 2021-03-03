@@ -58,7 +58,7 @@ namespace BFNet.Execution
 						var instructionResult = ExecuteInstruction((Instruction) treeObject);
 						if (instructionResult.HasValue) output.Append(instructionResult.Value);
 					}
-					else output.Append(Interpret(((Loop) treeObject).TreeChildren));
+					else output.Append(Interpret(((Loop) treeObject).TreeChildren, true)); // Last ditch fix attempt before i sleep: add the missing true here
 				}
 			}
 		}
