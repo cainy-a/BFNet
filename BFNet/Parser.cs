@@ -6,13 +6,7 @@ namespace BFNet
 {
 	public static class Parser
 	{
-		public static TreeRoot ParseFullTree(this string input)
-		{
-			var rawParsed = input.Parse();
-			var expanded  = rawParsed.ExpandTree();
-
-			return expanded;
-		}
+		public static TreeRoot ParseFullTree(this string input, char? lineCommentChar = null) => input.RemoveComments(lineCommentChar).Parse().ExpandTree();
 
 		public static TreeRoot Parse(this string input) => new()
 		{
@@ -58,7 +52,7 @@ namespace BFNet
 			return loopContent.ToArray();
 		}
 
-		public static string RemoveComments(this string input, char? lineCommentChar)
+		public static string RemoveComments(this string input, char? lineCommentChar = null)
 		{
 			var working = new StringBuilder();
 			foreach (var line in input.FixLineEndings().Split('\n'))

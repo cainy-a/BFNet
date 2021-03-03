@@ -59,24 +59,30 @@ namespace BFNet.Tests
 		[Test]
 		public void NestedLoopTest()
 		{
-			const string bf       = "+[-[>]]";
-			var          expected = new TreeRoot
+			const string bf = "+[-[>]]";
+			var expected = new TreeRoot
 			{
 				Tree = new TreeObject[]
 				{
 					new Instruction {Operation = Operations.Increment},
-					new Loop{TreeChildren = new TreeObject[]
+					new Loop
 					{
-						new Instruction {Operation = Operations.Decrement},
-						new Loop{TreeChildren = new TreeObject[]
+						TreeChildren = new TreeObject[]
 						{
-							new Instruction {Operation = Operations.PointerForward},
-						}}
-					}}
+							new Instruction {Operation = Operations.Decrement},
+							new Loop
+							{
+								TreeChildren = new TreeObject[]
+								{
+									new Instruction {Operation = Operations.PointerForward},
+								}
+							}
+						}
+					}
 				}
 			};
-			var          actual   = bf.ParseFullTree();
-			
+			var actual = bf.ParseFullTree();
+
 			Assert.AreEqual(expected, actual);
 		}
 	}
