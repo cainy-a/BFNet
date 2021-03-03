@@ -13,7 +13,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BFNet\BFNet.csproj" />
+      <ProjectReference Include="..\BFNet.PreProcessing\BFNet.PreProcessing.csproj" />
+      <ProjectReference Include="..\BFNet.Core\BFNet.Core.csproj" />
     </ItemGroup>
 
 </Project>

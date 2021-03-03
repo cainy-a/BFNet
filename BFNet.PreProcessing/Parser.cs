@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace BFNet
+namespace BFNet.Parser
 {
 	public static class Parser
 	{

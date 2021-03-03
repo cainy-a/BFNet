@@ -1,3 +1,4 @@
+using BFNet.Parser;
 using NUnit.Framework;
 
 namespace BFNet.Tests

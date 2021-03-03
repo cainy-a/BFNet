@@ -1,8 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BFNet", "BFNet\BFNet.csproj", "{6E15DBB8-A94F-43F6-A1A2-B752C907F8D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BFNet.Core", "BFNet.Core\BFNet.Core.csproj", "{6E15DBB8-A94F-43F6-A1A2-B752C907F8D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BFNet.Tests", "BFNet.Tests\BFNet.Tests.csproj", "{852F3549-1609-4672-B0AD-7AC09776198D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BFNet.PreProcessing", "BFNet.PreProcessing\BFNet.PreProcessing.csproj", "{6D4B1B48-9517-490B-A870-72ADA7B9B91B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BFNet.Execution", "BFNet.Execution\BFNet.Execution.csproj", "{71C3CEBF-8E0C-41D4-AE70-F832FEB5BDF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +22,13 @@ Global
 		{852F3549-1609-4672-B0AD-7AC09776198D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{852F3549-1609-4672-B0AD-7AC09776198D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{852F3549-1609-4672-B0AD-7AC09776198D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D4B1B48-9517-490B-A870-72ADA7B9B91B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D4B1B48-9517-490B-A870-72ADA7B9B91B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D4B1B48-9517-490B-A870-72ADA7B9B91B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D4B1B48-9517-490B-A870-72ADA7B9B91B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71C3CEBF-8E0C-41D4-AE70-F832FEB5BDF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71C3CEBF-8E0C-41D4-AE70-F832FEB5BDF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71C3CEBF-8E0C-41D4-AE70-F832FEB5BDF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71C3CEBF-8E0C-41D4-AE70-F832FEB5BDF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
