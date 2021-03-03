@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace BFNet.Execution
 {
@@ -10,51 +11,86 @@ namespace BFNet.Execution
 		// list expansion is slow, so to increase memory access
 		// performance at first, start with 32 cells
 		// (this becomes exponentially less of a problem as the amount of cells grows) 
-		public IList<short>        _memoryCells  { get; private set; } = new List<short>(32);
-		public int                 _pointer      { get; private set; }
-		public int                 _inputIndex   { get; private set; }
-		public TreeRoot            _instructions { get; private set; }
-		public InterpreterSettings _settings     { get; private set; }
+		public IList<short>        MemoryCells  { get; private set; } = new List<short>(32);
+		public int                 Pointer      { get; private set; }
+		public int                 InputIndex   { get; private set; }
+		public TreeRoot            Tree { get; private set; }
+		public InterpreterSettings Settings     { get; private set; }
 
-		public Interpreter(TreeRoot instructions, InterpreterSettings settings = null)
+		public Interpreter(TreeRoot tree, InterpreterSettings settings = null)
 		{
-			_instructions  = instructions;
-			_settings = settings ?? new InterpreterSettings();
+			Tree  = tree;
+			Settings = settings ?? new InterpreterSettings();
 		}
 
-		public void Interpret()
+		public string StartInterpret() => Interpret(Tree.Tree);
+
+		/*
+		 * TODO: fix following error:
+		 * System.ArgumentOutOfRangeException : Index must be within the bounds of the List. (Parameter 'index')
+	   	 * at System.Collections.Generic.List`1.Insert(Int32 index, T item)
+	   	 * at BFNet.Execution.Utils.SafeIncrement(IList`1& cells, Int32 index, Int16 amount) in BFNet\BFNet.Execution\Utils.cs:line 24
+	   	 * at BFNet.Execution.Interpreter.ExecuteInstruction(Instruction instruction) in BFNet\BFNet.Execution\Interpreter.cs:line 59
+	   	 * at BFNet.Execution.Interpreter.<Interpret>g__ExecuteAllInTree|22_0(<>c__DisplayClass22_0& ) in BFNet\BFNet.Execution\Interpreter.cs:line 45
+	   	 * at BFNet.Execution.Interpreter.Interpret(IEnumerable`1 tree, Boolean isLoop) in BFNet\BFNet.Execution\Interpreter.cs:line 35
+	   	 * at BFNet.Execution.Interpreter.<Interpret>g__ExecuteAllInTree|22_0(<>c__DisplayClass22_0& ) in BFNet\BFNet.Execution\Interpreter.cs:line 48
+	   	 * at BFNet.Execution.Interpreter.Interpret(IEnumerable`1 tree, Boolean isLoop) in BFNet\BFNet.Execution\Interpreter.cs:line 35
+	   	 * at BFNet.Execution.Interpreter.StartInterpret() in BFNet\BFNet.Execution\Interpreter.cs:line 26
+	   	 * at BFNet.Tests.InterpreterTests.LoopInterpretTest() in BFNet\BFNet.Tests\InterpreterTests.cs:line 110
+		 */ 
+		private string Interpret(IEnumerable<TreeObject> tree, bool isLoop = false)
 		{
-			
+			var output = new StringBuilder(string.Empty);
+			if (isLoop)
+				while (MemoryCells.ElementAtOrDefault(Pointer) != 0)
+					ExecuteAllInTree();
+			else
+				ExecuteAllInTree();
+
+			return output.ToString();
+
+			void ExecuteAllInTree()
+			{
+				foreach (var treeObject in tree)
+				{
+					if (treeObject.GetType() == typeof(Instruction))
+					{
+						var instructionResult = ExecuteInstruction((Instruction) treeObject);
+						if (instructionResult.HasValue) output.Append(instructionResult.Value);
+					}
+					else output.Append(Interpret(((Loop) treeObject).TreeChildren));
+				}
+			}
 		}
 
 		public char? ExecuteInstruction(Instruction instruction)
 		{
-			var memoryCellsRefHack = _memoryCells; // Hack to get ref to work
+			var memoryCellsRefHack = MemoryCells; // Hack to get ref to work
 			switch (instruction.Operation)
 			{
 				case Operations.Increment:
-					Utils.SafeIncrement(ref memoryCellsRefHack, _pointer);
+					Utils.SafeIncrement(ref memoryCellsRefHack, Pointer);
 					break;
 				case Operations.Decrement:
 					// Hack to get ref to work
-					Utils.SafeIncrement(ref memoryCellsRefHack, _pointer, -1);
+					Utils.SafeIncrement(ref memoryCellsRefHack, Pointer, -1);
 					break;
 				case Operations.PointerForward:
-					_pointer++;
+					Pointer++;
 					break;
 				case Operations.PointerBackward:
-					_pointer--;
+					Pointer--;
 					break;
 				case Operations.AsciiOut:
-					if (_settings.UseConsole) Console.Write(_memoryCells[_pointer].ToAsciiCode());
-					else return _memoryCells[_pointer].ToAsciiCode();
+					if (Settings.UseConsole) Console.Write(MemoryCells[Pointer].ToAsciiCode());
+					else return MemoryCells[Pointer].ToAsciiCode();
 					break;
 				case Operations.AsciiIn:
-					if (_settings.UseConsole) _memoryCells[_pointer] = Console.ReadKey().KeyChar.ToChar();
+					if (Settings.UseConsole) MemoryCells[Pointer] = Console.ReadKey().KeyChar.ToChar();
 					else
 					{
-						_memoryCells[_pointer] = _settings.Input[_inputIndex].ToChar();
-						_inputIndex++;
+						MemoryCells[Pointer] = Settings.Input[InputIndex].ToChar();
+						InputIndex++;
 					}
 					break;
 				case Operations.StartLoop:
@@ -65,7 +101,7 @@ namespace BFNet.Execution
 					throw new InvalidDataException($"Invalid instruction \"{instruction.Operation.ToString()}\"");
 			}
 			
-			_memoryCells = memoryCellsRefHack;
+			MemoryCells = memoryCellsRefHack;
 
 			return null;
 		}
