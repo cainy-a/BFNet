@@ -28,17 +28,17 @@ namespace BFNet.Tests
 			var          expected4 = new List<short> { 0, 2, 0, 1 };
 			IList<short> working   = new List<short>();
 			
-			Utils.SafeIncrement(ref working, 0);
-			Assert.AreEqual(expected1, working);
+			IncrementAndTest(expected1, 0);
+			IncrementAndTest(expected2, 3);
+			IncrementAndTest(expected3, 0, -1);
+			IncrementAndTest(expected4, 1, 2);
 			
-			Utils.SafeIncrement(ref working, 3);
-			Assert.AreEqual(expected2, working);
-			
-			Utils.SafeIncrement(ref working, 0, -1);
-			Assert.AreEqual(expected3, working);
-			
-			Utils.SafeIncrement(ref working, 1, 2);
-			Assert.AreEqual(expected4, working);
+			// I love compact code
+			void IncrementAndTest(IList<short> expected, int index, short increment = 1)
+			{
+				Utils.SafeIncrement(ref working, index, increment);
+				Assert.AreEqual(expected, working);
+			}
 		}
 	}
 }
