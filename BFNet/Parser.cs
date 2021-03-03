@@ -47,14 +47,18 @@ namespace BFNet
 				var currentInstruction = (Instruction) root.Hierarchy[++i];
 
 				if (currentInstruction.Operation == Operations.StartLoop)
+				{
 					loopContent.Add(new Loop
 					{
 						HierarchyChildren = ExpandLoopContentRecursive(ref i, ref tree, ref root)
 					});
+					continue;
+				}
 
 				if (currentInstruction.Operation == Operations.EndLoop) break;
 				loopContent.Add(currentInstruction);
 			}
+
 			return loopContent.ToArray();
 		}
 
