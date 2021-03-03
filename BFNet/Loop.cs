@@ -2,14 +2,14 @@
 
 namespace BFNet
 {
-	public class Loop : HierarchyObject
+	public class Loop : TreeObject
 	{
-		public HierarchyObject[] HierarchyChildren;
+		public TreeObject[] TreeChildren;
 
-		public override bool Equals(object? obj) => obj is Loop casted && HierarchyChildren.SequenceEqual(casted.HierarchyChildren);
+		public override bool Equals(object? obj) => obj is Loop casted && TreeChildren.SequenceEqual(casted.TreeChildren);
 
 		protected bool Equals(Loop other) => Equals(this, other);
 
-		public override int GetHashCode() => HierarchyChildren != null ? HierarchyChildren.GetHashCode() : 0;
+		public override int GetHashCode() => TreeChildren != null ? TreeChildren.GetHashCode() : 0;
 	}
 }

@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace BFNet
 {
 	[DebuggerDisplay("{Operation.ToString()}")]
-	public class Instruction : HierarchyObject
+	public class Instruction : TreeObject
 	{
 		public static readonly Dictionary<char, Operations> InstructionLookupTable = new()
 		{

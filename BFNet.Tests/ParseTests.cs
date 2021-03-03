@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using NUnit.Framework;
 
 namespace BFNet.Tests
@@ -13,9 +11,9 @@ namespace BFNet.Tests
 		public void NoLoopsTest()
 		{
 			const string bf = "+>+<";
-			var expected = new HierarchyRoot
+			var expected = new TreeRoot
 			{
-				Hierarchy = new HierarchyObject[]
+				Tree = new TreeObject[]
 				{
 					new Instruction {Operation = Operations.Increment},
 					new Instruction {Operation = Operations.PointerForward},
@@ -32,16 +30,16 @@ namespace BFNet.Tests
 		[Test]
 		public void OneLevelLoopTest()
 		{
-			// welp that infinite loops
+			// welp that infinite loops, but this is only parsing not executing
 			const string bf = "+[>+-<]-";
-			var expected = new HierarchyRoot
+			var expected = new TreeRoot
 			{
-				Hierarchy = new HierarchyObject[]
+				Tree = new TreeObject[]
 				{
 					new Instruction {Operation = Operations.Increment},
 					new Loop
 					{
-						HierarchyChildren = new HierarchyObject[]
+						TreeChildren = new TreeObject[]
 						{
 							new Instruction {Operation = Operations.PointerForward},
 							new Instruction {Operation = Operations.Increment},
@@ -53,7 +51,7 @@ namespace BFNet.Tests
 				}
 			};
 
-			var actual = bf.ParseFullHierarchy();
+			var actual = bf.ParseFullTree();
 
 			Assert.AreEqual(expected, actual);
 		}
@@ -62,22 +60,22 @@ namespace BFNet.Tests
 		public void NestedLoopTest()
 		{
 			const string bf       = "+[-[>]]";
-			var          expected = new HierarchyRoot
+			var          expected = new TreeRoot
 			{
-				Hierarchy = new HierarchyObject[]
+				Tree = new TreeObject[]
 				{
 					new Instruction {Operation = Operations.Increment},
-					new Loop{HierarchyChildren = new HierarchyObject[]
+					new Loop{TreeChildren = new TreeObject[]
 					{
 						new Instruction {Operation = Operations.Decrement},
-						new Loop{HierarchyChildren = new HierarchyObject[]
+						new Loop{TreeChildren = new TreeObject[]
 						{
 							new Instruction {Operation = Operations.PointerForward},
 						}}
 					}}
 				}
 			};
-			var          actual   = bf.ParseFullHierarchy();
+			var          actual   = bf.ParseFullTree();
 			
 			Assert.AreEqual(expected, actual);
 		}
