@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace BFNet.Execution
 {
@@ -9,11 +10,11 @@ namespace BFNet.Execution
 		// list expansion is slow, so to increase memory access
 		// performance at first, start with 32 cells
 		// (this becomes exponentially less of a problem as the amount of cells grows) 
-		private          IList<short>        _memoryCells = new List<short>(32);
-		private          int                 _pointer     = 0;
-		private          int                 _inputIndex  = 0;
-		private readonly TreeRoot            _instructions;
-		private readonly InterpreterSettings _settings;
+		public IList<short>        _memoryCells  { get; private set; } = new List<short>(32);
+		public int                 _pointer      { get; private set; }
+		public int                 _inputIndex   { get; private set; }
+		public TreeRoot            _instructions { get; private set; }
+		public InterpreterSettings _settings     { get; private set; }
 
 		public Interpreter(TreeRoot instructions, InterpreterSettings settings = null)
 		{
@@ -28,13 +29,15 @@ namespace BFNet.Execution
 
 		public char? ExecuteInstruction(Instruction instruction)
 		{
+			var memoryCellsRefHack = _memoryCells; // Hack to get ref to work
 			switch (instruction.Operation)
 			{
 				case Operations.Increment:
-					_memoryCells[_pointer]++;
+					Utils.SafeIncrement(ref memoryCellsRefHack, _pointer);
 					break;
 				case Operations.Decrement:
-					_memoryCells[_pointer]--;
+					// Hack to get ref to work
+					Utils.SafeIncrement(ref memoryCellsRefHack, _pointer, -1);
 					break;
 				case Operations.PointerForward:
 					_pointer++;
@@ -61,6 +64,8 @@ namespace BFNet.Execution
 				default:
 					throw new InvalidDataException($"Invalid instruction \"{instruction.Operation.ToString()}\"");
 			}
+			
+			_memoryCells = memoryCellsRefHack;
 
 			return null;
 		}
