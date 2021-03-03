@@ -17,16 +17,21 @@ namespace BFNet
 					   .ToArray()
 		};
 
-		private static TreeRoot ExpandTree(this TreeRoot tree)
+		private static TreeRoot ExpandTree(this TreeRoot root)
 		{
-			return new()
+			var tree = new List<TreeObject>();
+			// Actually it can't - I did that in 2fc90e87 and it broke.
+			// ReSharper disable once LoopCanBeConvertedToQuery
+			for (var i = 0; i < root.Tree.Length; i++)
 			{
-				Tree = tree.Tree
-						   .Select((hierarchyObject, i) => // for each item in the tree
-											((Instruction) hierarchyObject).Operation == Operations.StartLoop // is it a loop start? 
-												? new Loop {TreeChildren = ExpandLoopContentRecursive(ref i, ref tree)} // Expand the loop (recursively!)
-												: hierarchyObject).ToArray() // Else just copy it untouched
-			};
+				var hierarchyObject = root.Tree[i];
+
+				tree.Add(((Instruction) hierarchyObject).Operation == Operations.StartLoop
+							 ? new Loop {TreeChildren = ExpandLoopContentRecursive(ref i, ref root)}
+							 : hierarchyObject);
+			}
+
+			return new TreeRoot {Tree = tree.ToArray()};
 		}
 
 		private static TreeObject[] ExpandLoopContentRecursive(ref int i, ref TreeRoot root)
