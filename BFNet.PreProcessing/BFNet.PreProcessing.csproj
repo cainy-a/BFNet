@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <RootNamespace>BFNet.Parser</RootNamespace>
+        <RootNamespace>BFNet.PreProcessing</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
