@@ -78,7 +78,10 @@ namespace BFNet.Tests
 				{
 					// Add 1 to c0
 					I(Operations.PointerBackward),
-					I(Operations.Increment)
+					I(Operations.Increment),
+					// Subtract 1 from c1
+					I(Operations.PointerForward),
+					I(Operations.Decrement)
 				}), // End your loops with the cell pointer on the loop counter
 				
 				/*

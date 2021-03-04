@@ -23,21 +23,22 @@ namespace BFNet.Execution
 			Settings = settings ?? new InterpreterSettings();
 		}
 
+		public void InjectNewInstructions(TreeRoot tree, bool append = false)
+		{
+			if (!append)
+			{
+				Tree = tree;
+				return;
+			}
+
+			var list = tree.Tree.ToList();
+			list.AddRange(tree.Tree);
+			Tree.Tree = list.ToArray();
+		}
+
 		public string StartInterpret() => Interpret(Tree.Tree);
 
-		/*
-		 * TODO: fix following error:
-		 * System.ArgumentOutOfRangeException : Index must be within the bounds of the List. (Parameter 'index')
-	   	 * at System.Collections.Generic.List`1.Insert(Int32 index, T item)
-	   	 * at BFNet.Execution.Utils.SafeIncrement(IList`1& cells, Int32 index, Int16 amount) in BFNet\BFNet.Execution\Utils.cs:line 24
-	   	 * at BFNet.Execution.Interpreter.ExecuteInstruction(Instruction instruction) in BFNet\BFNet.Execution\Interpreter.cs:line 59
-	   	 * at BFNet.Execution.Interpreter.<Interpret>g__ExecuteAllInTree|22_0(<>c__DisplayClass22_0& ) in BFNet\BFNet.Execution\Interpreter.cs:line 45
-	   	 * at BFNet.Execution.Interpreter.Interpret(IEnumerable`1 tree, Boolean isLoop) in BFNet\BFNet.Execution\Interpreter.cs:line 35
-	   	 * at BFNet.Execution.Interpreter.<Interpret>g__ExecuteAllInTree|22_0(<>c__DisplayClass22_0& ) in BFNet\BFNet.Execution\Interpreter.cs:line 48
-	   	 * at BFNet.Execution.Interpreter.Interpret(IEnumerable`1 tree, Boolean isLoop) in BFNet\BFNet.Execution\Interpreter.cs:line 35
-	   	 * at BFNet.Execution.Interpreter.StartInterpret() in BFNet\BFNet.Execution\Interpreter.cs:line 26
-	   	 * at BFNet.Tests.InterpreterTests.LoopInterpretTest() in BFNet\BFNet.Tests\InterpreterTests.cs:line 110
-		 */ 
+		// TODO: Graceful error handling
 		private string Interpret(IEnumerable<TreeObject> tree, bool isLoop = false)
 		{
 			var output = new StringBuilder(string.Empty);
