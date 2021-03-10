@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BFNet.BrainFck;
 using BFNet.Execution;
 using NUnit.Framework;
 

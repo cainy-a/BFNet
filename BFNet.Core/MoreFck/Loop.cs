@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace BFNet
+namespace BFNet.MoreFck
 {
 	public class Loop : TreeObject
 	{

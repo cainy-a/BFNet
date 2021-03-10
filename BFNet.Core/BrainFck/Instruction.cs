@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace BFNet
+namespace BFNet.BrainFck
 {
 	[DebuggerDisplay("{Operation.ToString()}")]
 	public class Instruction : TreeObject

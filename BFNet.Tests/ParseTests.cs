@@ -1,3 +1,4 @@
+using BFNet.BrainFck;
 using BFNet.PreProcessing;
 using NUnit.Framework;
 
