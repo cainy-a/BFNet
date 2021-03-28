@@ -99,6 +99,9 @@ namespace BFNet.Execution
 					throw new InvalidOperationException("Loop start & end instructions are not valid here - preprocessing failed");
 				case Operations.EndLoop:
 					throw new InvalidOperationException("Loop start & end instructions are not valid here - preprocessing failed or unmatched endloop");
+				case Operations.SetZero:
+					Utils.SafeSet(ref memoryCellsRefHack, Pointer, 0);
+					break;
 				default:
 					throw new InvalidDataException($"Invalid instruction \"{instruction.Operation.ToString()}\"");
 			}

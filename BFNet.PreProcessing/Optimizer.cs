@@ -14,6 +14,12 @@ namespace BFNet.PreProcessing
 
 			for (var i = 0; i < treeObjects.Length; i++)
 			{
+				if (IsSetZero(treeObjects, i))
+				{
+					working.Add(new MoreFck.Instruction{Operation = MoreFck.Operations.SetZero});
+					continue;
+				}
+				
 				if (treeObjects[i].GetType() == typeof(BrainFck.Loop))
 				{
 					var loop      = (BrainFck.Loop) treeObjects[i];
@@ -77,6 +83,16 @@ namespace BFNet.PreProcessing
 
 			endIndex = startIndex + amountFound - 1;
 			return amountFound;
+		}
+
+		private static bool IsSetZero(TreeObject[] treeObjects, int i)
+		{
+			if (treeObjects[i].GetType() != typeof(BrainFck.Loop)) return false; // must be a BrainF*ck loop
+			
+			var loop = (BrainFck.Loop) treeObjects[i]; // we know its safe to cast now
+			return loop.TreeChildren.Length == 1 // only one object in loop
+				&& loop.TreeChildren[0].GetType() == typeof(BrainFck.Instruction) // must be a BrainF*ck instruction
+				&& ((BrainFck.Instruction) loop.TreeChildren[0]).Operation == BrainFck.Operations.Decrement; // must be decrement op
 		}
 	}
 }

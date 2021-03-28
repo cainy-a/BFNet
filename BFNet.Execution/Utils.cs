@@ -11,6 +11,11 @@ namespace BFNet.Execution
 		
 		public static void SafeIncrement(ref IList<short> cells, int index, short amount = 1)
 		{
+			SafeSet(ref cells, index, (short) (cells.ElementAtOrDefault(index) + amount));
+		}
+
+		public static void SafeSet(ref IList<short> cells, int index, short amount)
+		{
 			try
 			{
 				// Try to just set the value simply
@@ -21,7 +26,7 @@ namespace BFNet.Execution
 				// If required, populate previous cells with default of 0
 				for (var i = cells.Count; i < index; i++) cells.Insert(i, 0);
 				// Set value
-				cells.Insert(index, (short) (cells.ElementAtOrDefault(index) + amount));
+				cells.Insert(index, amount);
 			}
 		}
 	}
