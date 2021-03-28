@@ -49,10 +49,9 @@ namespace BFNet.Tests
 			var interpreter = new Interpreter(new TreeRoot{Tree = new TreeObject[]
 			{
 				new Instruction{Operation = Operations.Add, OpData = 1},
-				new Instruction{Operation = Operations.PointerForward},
-				new Instruction{Operation = Operations.PointerForward},
-				new Instruction{Operation = Operations.Add, OpData = 1},
-				new Instruction{Operation = Operations.Add, OpData = 1}
+				new Instruction{Operation = Operations.PointerForward, OpData = 1},
+				new Instruction{Operation = Operations.PointerForward, OpData = 1},
+				new Instruction{Operation = Operations.Add, OpData = 2}
 			}});
 
 			interpreter.StartInterpret();
@@ -70,10 +69,10 @@ namespace BFNet.Tests
 			var interpreter = new Interpreter(new TreeRoot{Tree = new TreeObject[]
 			{
 				// Cell c0 = 2
-				I(Operations.Add, 1), I(Operations.Add, 1),
+				I(Operations.Add, 2),
 				// Cell c1 = 5
 				I(Operations.PointerForward),
-				I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
+				I(Operations.Add, 5),
 				//Start your loops with your cell pointer on the loop counter (c1 in our case)
 				L(new TreeObject[]
 				{
@@ -94,14 +93,12 @@ namespace BFNet.Tests
 				 */
 				
 				// c1 = 8 and this will be our loop counter again
-				I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
-				I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
+				I(Operations.Add, 8),
 				L(new TreeObject[]
 				{
 					// Add 6 to c0
 					I(Operations.PointerBackward),
-					I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
-					I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
+					I(Operations.Add, 6),
 					// Subtract 1 from c1
 					I(Operations.PointerForward),
 					I(Operations.Subtract, 1)
@@ -118,7 +115,7 @@ namespace BFNet.Tests
 			Assert.AreEqual(expected, actual);
 
 
-			static Instruction I(Operations   op, short data = default) => new() {Operation = op, OpData = data};
+			static Instruction I(Operations   op, short data = 1) => new() {Operation = op, OpData = data};
 			static Loop        L(TreeObject[] tree) => new() {TreeChildren = tree};
 		}
 	}

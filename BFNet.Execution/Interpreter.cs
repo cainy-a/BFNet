@@ -78,10 +78,10 @@ namespace BFNet.Execution
 					Utils.SafeIncrement(ref memoryCellsRefHack, Pointer, (short) - instruction.OpData);
 					break;
 				case Operations.PointerForward:
-					Pointer++;
+					Pointer += instruction.OpData;
 					break;
 				case Operations.PointerBackward:
-					Pointer--;
+					Pointer -= instruction.OpData;
 					break;
 				case Operations.AsciiOut:
 					if (Settings.UseConsole) Console.Write(MemoryCells[Pointer].ToAsciiCode());
