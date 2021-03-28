@@ -1,4 +1,6 @@
 # BFNet
+[![buddy pipeline](https://app.buddy.works/cainy-a/bfnet/pipelines/pipeline/313407/badge.svg?token=537b401f436f16f2fb7cc5edefd041f3aa593895b89e70cf2ca999b54ea0fdb8 "buddy pipeline")](https://app.buddy.works/cainy-a/bfnet/pipelines/pipeline/313407)
+
 A high-performance(~ish) Brainf*ck interpreter with (almost) unlimited 16-bit memory cells, written in C#, with a nod to my failed previous attempt [here](https://github.com/cainy-a/MindMangler).
 
 16 bits should be the most you'll need.
