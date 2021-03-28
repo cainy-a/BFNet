@@ -19,6 +19,7 @@ namespace BFNet.PreProcessing
 					var loop      = (BrainFck.Loop) treeObjects[i];
 					var optimized = OptimizeRecursive(loop.TreeChildren);
 					working.Add(new MoreFck.Loop {TreeChildren = optimized});
+					continue;
 				}
 
 				var instruction = (BrainFck.Instruction) treeObjects[i];

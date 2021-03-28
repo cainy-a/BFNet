@@ -12,7 +12,7 @@ namespace BFNet.Tests
 		{
 			const string code =
 				"++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
-			var parsed      = code.ParseFullTree();
+			var parsed      = code.ParseFullTree().Optimize();
 			var interpreter = new Interpreter(parsed);
 
 			var          actual   = interpreter.StartInterpret();
@@ -71,7 +71,7 @@ Pointer :   ^
 >++.                    And finally a newline from Cell #6
 ";
 
-			var parsed      = code.ParseFullTree();
+			var parsed      = code.ParseFullTree().Optimize();
 			var interpreter = new Interpreter(parsed);
 
 			var          actual   = interpreter.StartInterpret();
@@ -108,8 +108,8 @@ Pointer :   ^
 <<<+<->>>>[>+<<<+++++++++<->>>-]<<<<<[>>+<<-]+<[->-<]>[>>.<<<<[+.[-]]>>-]>[>>.<<
 -]>[-]>[-]>>>[>>[<<<<<<<<+>>>>>>>>-]<<-]]>>[-]<<<[-]<<<<<<<<]++++++++++.
 ";
-			const string expected = "3.14159265358979";
-			var          parsed      = code.ParseFullTree();
+			const string expected    = "3.14159265358979";
+			var          parsed      = code.ParseFullTree().Optimize();
 			var          interpreter = new Interpreter(parsed);
 
 			var          actual   = interpreter.StartInterpret();
@@ -126,8 +126,8 @@ Pointer :   ^
 >>+.++++++++++.<<.>>+.------------.---.<<.>>---.
 +++.++++++++++++++.+.<<+.[-]++++++++++.
 ";
-			const string expected = "Arch is the best!";
-			var          parsed      = code.ParseFullTree();
+			const string expected    = "Arch is the best!";
+			var          parsed      = code.ParseFullTree().Optimize();
 			var          interpreter = new Interpreter(parsed);
 
 			var          actual   = interpreter.StartInterpret();
@@ -339,7 +339,7 @@ AAAAAAAAAAAAABBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDDDEEEEFFFI 
 AAAAAAAAAAAAAAABBBBBBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDEEEFGIIGFFEEEDDDDDDDDCCCCCCCCCBBBBBBBBBBBBBBBBBBBBBBBBBB";
 			// ReSharper restore StringLiteralTypo
 
-			var parsed      = code.ParseFullTree();
+			var parsed      = code.ParseFullTree().Optimize();
 			var interpreter = new Interpreter(parsed);
 
 			var actual = interpreter.StartInterpret();
