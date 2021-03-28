@@ -1,9 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace BFNet.MoreFck
 {
-	[DebuggerDisplay("{Operation.ToString()}")]
+	[DebuggerDisplay("{Operation.ToString()} ({OpData.ToString()})")]
 	public class Instruction : TreeObject
 	{
 		public Operations Operation;

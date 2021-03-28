@@ -6,9 +6,7 @@ namespace BFNet.PreProcessing
 {
 	public static class Optimizer
 	{
-		public static TreeRoot OptimizeFullTree(TreeRoot tree) => new() {Tree = Optimize(tree.Tree)};
-
-		private static TreeObject[] Optimize(TreeObject[] treeObjects) => OptimizeRecursive(treeObjects);
+		public static TreeRoot Optimize(this TreeRoot tree) => new() {Tree = OptimizeRecursive(tree.Tree)};
 
 		private static TreeObject[] OptimizeRecursive(TreeObject[] treeObjects)
 		{
