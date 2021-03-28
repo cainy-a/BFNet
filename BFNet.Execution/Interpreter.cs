@@ -60,7 +60,7 @@ namespace BFNet.Execution
 						var instructionResult = ExecuteInstruction((Instruction) treeObject);
 						if (instructionResult.HasValue) output.Append(instructionResult.Value);
 					}
-					else output.Append(Interpret(((Loop) treeObject).TreeChildren, true)); // Last ditch fix attempt before i sleep: add the missing true here
+					else output.Append(Interpret(((Loop) treeObject).TreeChildren, true));
 				}
 			}
 		}
@@ -95,13 +95,14 @@ namespace BFNet.Execution
 						InputIndex++;
 					}
 					break;
-				case Operations.StartLoop:
-					throw new InvalidOperationException("Loop start & end instructions are not valid here - preprocessing failed");
-				case Operations.EndLoop:
-					throw new InvalidOperationException("Loop start & end instructions are not valid here - preprocessing failed or unmatched endloop");
 				case Operations.SetZero:
 					Utils.SafeSet(ref memoryCellsRefHack, Pointer, 0);
 					break;
+				
+				case Operations.StartLoop:
+					throw new InvalidOperationException("A loop start instruction is not valid here - preprocessing failed");
+				case Operations.EndLoop:
+					throw new InvalidOperationException("A loop end instruction is not valid here - preprocessing failed or unmatched endloop");
 				default:
 					throw new InvalidDataException($"Invalid instruction \"{instruction.Operation.ToString()}\"");
 			}

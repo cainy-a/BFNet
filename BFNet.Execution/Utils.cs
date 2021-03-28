@@ -19,12 +19,12 @@ namespace BFNet.Execution
 			try
 			{
 				// Try to just set the value simply
-				cells[index] += amount;
+				cells[index] = amount;
 			}
 			catch (ArgumentOutOfRangeException) // Value does not already exist
 			{
 				// If required, populate previous cells with default of 0
-				for (var i = cells.Count; i < index; i++) cells.Insert(i, 0);
+				for (var i = cells.Count; i < index; i++) cells.Insert(i, default);
 				// Set value
 				cells.Insert(index, amount);
 			}
