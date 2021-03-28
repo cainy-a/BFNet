@@ -116,6 +116,24 @@ Pointer :   ^
 
 			Assert.AreEqual(expected, actual.Trim());
 		}
+		
+		[Test]
+		public void ArchTest()
+		{
+			const string code = @"
+++>++++++>+++++<+[>[->+<]<->++++++++++<]>>.<[-]>[-<++>]
+<----------------.---------------.+++++.<+++[-<++++++++++>]<.
+>>+.++++++++++.<<.>>+.------------.---.<<.>>---.
++++.++++++++++++++.+.<<+.[-]++++++++++.
+";
+			const string expected = "Arch is the best!";
+			var          parsed      = code.ParseFullTree();
+			var          interpreter = new Interpreter(parsed);
+
+			var          actual   = interpreter.StartInterpret();
+
+			Assert.AreEqual(expected, actual.Trim());
+		}
 
 		// Commenting out this test for now as it's stupidly slow. Might even be hitting an infinite loop.
 		// ReSharper disable CommentTypo
