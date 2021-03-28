@@ -53,7 +53,7 @@ namespace BFNet.Tests
 				}
 			};
 
-			var actual = bf.ParseFullTree();
+			var actual = bf.ProcessAndParse();
 
 			Assert.AreEqual(expected, actual);
 		}
@@ -85,7 +85,7 @@ namespace BFNet.Tests
 					new Instruction {Operation = Operations.Decrement}
 				}
 			};
-			var actual = bf.ParseFullTree();
+			var actual = bf.ProcessAndParse();
 
 			Assert.AreEqual(expected, actual);
 		}

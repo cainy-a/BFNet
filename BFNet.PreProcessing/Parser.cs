@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BFNet.BrainFck;
@@ -7,7 +8,10 @@ namespace BFNet.PreProcessing
 {
 	public static class Parser
 	{
-		public static TreeRoot ParseFullTree(this string input, char? lineCommentChar = null) => input.RemoveComments(lineCommentChar).Parse().ExpandTree();
+		public static TreeRoot ProcessAndParse(this string input, char? lineCommentChar = null)
+			=> input.RemoveComments(lineCommentChar)
+					.Parse()
+					.ExpandTree();
 
 		public static TreeRoot Parse(this string input) => new()
 		{
