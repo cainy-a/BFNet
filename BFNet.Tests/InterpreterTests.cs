@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BFNet.BrainFck;
+using BFNet.MoreFck;
 using BFNet.Execution;
 using NUnit.Framework;
 
@@ -15,7 +15,7 @@ namespace BFNet.Tests
 		{
 			var interpreter = new Interpreter(new ());
 
-			interpreter.ExecuteInstruction(new (){Operation = Operations.Increment});
+			interpreter.ExecuteInstruction(new (){Operation = Operations.Add, OpData = 1});
 			
 			// this program is so simple that it doesnt output anything. We manually check the program's memory.
 			Assert.AreEqual(1, interpreter.MemoryCells[0]);
@@ -48,11 +48,11 @@ namespace BFNet.Tests
 		{
 			var interpreter = new Interpreter(new TreeRoot{Tree = new TreeObject[]
 			{
-				new Instruction{Operation = Operations.Increment},
+				new Instruction{Operation = Operations.Add, OpData = 1},
 				new Instruction{Operation = Operations.PointerForward},
 				new Instruction{Operation = Operations.PointerForward},
-				new Instruction{Operation = Operations.Increment},
-				new Instruction{Operation = Operations.Increment}
+				new Instruction{Operation = Operations.Add, OpData = 1},
+				new Instruction{Operation = Operations.Add, OpData = 1}
 			}});
 
 			interpreter.StartInterpret();
@@ -70,19 +70,19 @@ namespace BFNet.Tests
 			var interpreter = new Interpreter(new TreeRoot{Tree = new TreeObject[]
 			{
 				// Cell c0 = 2
-				I(Operations.Increment), I(Operations.Increment),
+				I(Operations.Add, 1), I(Operations.Add, 1),
 				// Cell c1 = 5
 				I(Operations.PointerForward),
-				I(Operations.Increment), I(Operations.Increment), I(Operations.Increment), I(Operations.Increment), I(Operations.Increment),
+				I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
 				//Start your loops with your cell pointer on the loop counter (c1 in our case)
 				L(new TreeObject[]
 				{
 					// Add 1 to c0
 					I(Operations.PointerBackward),
-					I(Operations.Increment),
+					I(Operations.Add, 1),
 					// Subtract 1 from c1
 					I(Operations.PointerForward),
-					I(Operations.Decrement)
+					I(Operations.Subtract, 1)
 				}), // End your loops with the cell pointer on the loop counter
 				
 				/*
@@ -94,17 +94,17 @@ namespace BFNet.Tests
 				 */
 				
 				// c1 = 8 and this will be our loop counter again
-				I(Operations.Increment), I(Operations.Increment), I(Operations.Increment), I(Operations.Increment),
-				I(Operations.Increment), I(Operations.Increment), I(Operations.Increment), I(Operations.Increment),
+				I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
+				I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
 				L(new TreeObject[]
 				{
 					// Add 6 to c0
 					I(Operations.PointerBackward),
-					I(Operations.Increment), I(Operations.Increment), I(Operations.Increment),
-					I(Operations.Increment), I(Operations.Increment), I(Operations.Increment),
+					I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
+					I(Operations.Add, 1), I(Operations.Add, 1), I(Operations.Add, 1),
 					// Subtract 1 from c1
 					I(Operations.PointerForward),
-					I(Operations.Decrement)
+					I(Operations.Subtract, 1)
 				}),
 				// Print out c0 which has the value 55 which translates to "7"!
 				I(Operations.PointerBackward),
@@ -118,7 +118,7 @@ namespace BFNet.Tests
 			Assert.AreEqual(expected, actual);
 
 
-			static Instruction I(Operations   op)   => new() {Operation    = op};
+			static Instruction I(Operations   op, short data = default) => new() {Operation = op, OpData = data};
 			static Loop        L(TreeObject[] tree) => new() {TreeChildren = tree};
 		}
 	}

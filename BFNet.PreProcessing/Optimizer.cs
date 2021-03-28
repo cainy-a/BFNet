@@ -45,7 +45,7 @@ namespace BFNet.PreProcessing
 								_ => throw new ArgumentOutOfRangeException(nameof(instruction),
 																		   $"Invalid operation {instruction.Operation.ToString()}")
 							},
-							OpData = amount
+							OpData = (short) amount
 						});
 						break;
 					case BrainFck.Operations.AsciiOut:
@@ -75,7 +75,7 @@ namespace BFNet.PreProcessing
 				amountFound++;
 			}
 
-			endIndex = startIndex + amountFound;
+			endIndex = startIndex + amountFound - 1;
 			return amountFound;
 		}
 	}

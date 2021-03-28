@@ -2,12 +2,12 @@
 
 namespace BFNet.MoreFck
 {
-	[DebuggerDisplay("{Operation.ToString()} ({OpData.ToString()})")]
+	[DebuggerDisplay("{Operation.ToString()} {OpData != default ? OpData.ToString() : string.Empty}")]
 	public class Instruction : TreeObject
 	{
 		public Operations Operation;
 
-		public int OpData;
+		public short OpData;
 
 		public override bool Equals(object? obj) => obj is Instruction casted && Operation.Equals(casted.Operation);
 

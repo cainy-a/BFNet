@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using BFNet.BrainFck;
+using BFNet.MoreFck;
 
 namespace BFNet.Execution
 {
@@ -70,12 +70,12 @@ namespace BFNet.Execution
 			var memoryCellsRefHack = MemoryCells; // Hack to get ref to work
 			switch (instruction.Operation)
 			{
-				case Operations.Increment:
-					Utils.SafeIncrement(ref memoryCellsRefHack, Pointer);
+				case Operations.Add:
+					Utils.SafeIncrement(ref memoryCellsRefHack, Pointer, instruction.OpData);
 					break;
-				case Operations.Decrement:
+				case Operations.Subtract:
 					// Hack to get ref to work
-					Utils.SafeIncrement(ref memoryCellsRefHack, Pointer, -1);
+					Utils.SafeIncrement(ref memoryCellsRefHack, Pointer, (short) - instruction.OpData);
 					break;
 				case Operations.PointerForward:
 					Pointer++;
