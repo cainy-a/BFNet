@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace BFNet.Cli
 {
@@ -8,27 +9,91 @@ namespace BFNet.Cli
 	{
 		public static string GetInput(out int lineCount)
 		{
-			IList<string> lines         = new List<string>();
-			var           lastLineEmpty = false;
+			var     input = new StringBuilder();
+			IList<ConsoleKeyInfo> previousInputs = new List<ConsoleKeyInfo>();
+
+			var currentX = 0;
+			var currentY = 0;
+			
+			int LineLength() => input.ToString().Split('\n')[currentY].Length;
+			int LineCount()      => input.ToString().Split('\n').Length;
+
 			while (true)
 			{
-				// get line from user
-				var line = Console.ReadLine();
+				var key = Console.ReadKey();
 
-				// add to list
-				lines.Add(line);
+				if (key.Key                            == ConsoleKey.Enter
+				 && previousInputs.LastOrDefault().Key == ConsoleKey.Enter) break;
 
-				// if two consecutive empty lines exit
-				if (!string.IsNullOrWhiteSpace(line)) continue;
-				if (lastLineEmpty) break;
-				lastLineEmpty = true;
+				// ReSharper disable once SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+				switch (key.Key)
+				{
+					case ConsoleKey.RightArrow:
+						if (currentX < LineLength())
+						{
+							currentX++;
+							Console.CursorLeft = Math.Min(currentX, LineLength());
+						}
+						else
+						{
+							currentX           = 0;
+							Console.CursorLeft = Math.Min(currentX, LineLength());
+							Console.CursorTop++;
+							currentY++;
+						}
+
+						break;
+
+					case ConsoleKey.LeftArrow:
+						if (currentX > 0)
+						{
+							currentX--;
+							Console.CursorLeft = Math.Min(currentX, LineLength());
+						}
+						else
+						{
+							currentY--;
+							Console.CursorTop--;
+							currentX           = LineLength() - 1;
+							Console.CursorLeft = Math.Min(currentX, LineLength());
+						}
+
+						break;
+
+					case ConsoleKey.DownArrow:
+						if (currentY < LineCount())
+						{
+							currentY++;
+							Console.CursorTop++;
+							Console.CursorLeft = Math.Min(currentX, LineLength());
+						}
+
+						break;
+					case ConsoleKey.Backspace:
+						input.Remove(input.Length - 1, 1);
+						if (LineLength() > 0)
+						{
+							currentX--;
+						}
+						else
+						{
+							currentY--;
+							Console.CursorTop--;
+							currentX = LineLength() - 1;
+						}
+						Console.CursorLeft = Math.Min(currentX, LineLength());
+						break;
+					default:
+						input.Append(key.KeyChar);
+						currentX++;
+						Console.CursorLeft = Math.Min(currentX, LineLength());
+						break;
+				}
+				previousInputs.Add(key);
 			}
 
-			lineCount = lines.Count;
-			
-			return lines.Aggregate(string.Empty,                  // start with nothing
-								   (current, next)                // get the current value and next
-									   => current + '\n' + next); // add each new line separated by \n
+			lineCount = LineCount();
+			return input.ToString();
 		}
 	}
 }
