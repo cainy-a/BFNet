@@ -84,11 +84,11 @@ namespace BFNet.Execution
 					Pointer -= instruction.OpData;
 					break;
 				case Operations.AsciiOut:
-					if (Settings.UseConsole) Console.Write(MemoryCells[Pointer].ToAsciiCode());
+					if (Settings.UseConsoleOutput) Console.Write(MemoryCells[Pointer].ToAsciiCode());
 					else return MemoryCells[Pointer].ToAsciiCode();
 					break;
 				case Operations.AsciiIn:
-					if (Settings.UseConsole) MemoryCells[Pointer] = Console.ReadKey().KeyChar.ToChar();
+					if (Settings.UseConsoleInput) MemoryCells[Pointer] = Console.ReadKey().KeyChar.ToChar();
 					else
 					{
 						MemoryCells[Pointer] = Settings.Input[InputIndex].ToChar();

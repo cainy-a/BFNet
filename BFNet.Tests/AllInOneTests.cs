@@ -135,7 +135,7 @@ Pointer :   ^
 			Assert.AreEqual(expected, actual.Trim());
 		}
 
-		// Commenting out this test for now as it's stupidly slow. Might even be hitting an infinite loop.
+		// Commenting out this test for now as it's stupidly slow.
 		// ReSharper disable CommentTypo
 		/*
 		[Test]

@@ -45,7 +45,8 @@ namespace BFNet.Cli
 			var interpreter = new Interpreter(processed, new InterpreterSettings
 			{
 				Input      = string.IsNullOrWhiteSpace(input) ? default : input,
-				UseConsole = string.IsNullOrWhiteSpace(input)
+				UseConsoleInput = string.IsNullOrWhiteSpace(input),
+				UseConsoleOutput = true
 			});
 
 			// interpret and also hide cursor because looks nice
@@ -76,20 +77,28 @@ namespace BFNet.Cli
 		{
 			// run interactive mode
 			var enteredBf = InteractiveMode(out var lineCount);
+
+
+			try
+			{
+				// go to top of interactive mode result
+				Console.CursorTop -= lineCount;
 			
-			// go to top of interactive mode result
-			Console.CursorTop -= lineCount;
+				// make a string to clear out the screen
+				var xSb = new StringBuilder();
+				for (var j = 0; j < Console.WindowWidth; j++) xSb.Append(' ');
+				var ySb = new StringBuilder();
+				for (var i = 0; i < lineCount; i++) ySb.Append(xSb);
+				// write it
+				Console.Write(ySb);
 			
-			// make a string to clear out the screen
-			var xSb = new StringBuilder();
-			for (var j = 0; j < Console.WindowWidth; j++) xSb.Append(' ');
-			var ySb = new StringBuilder();
-			for (var i = 0; i < lineCount; i++) ySb.Append(xSb);
-			// write it
-			Console.Write(ySb);
-			
-			// go to top again
-			Console.CursorTop -= lineCount;
+				// go to top again
+				Console.CursorTop -= lineCount;
+			}
+			catch
+			{
+				Console.WriteLine("Failed to clear your input away.\n");
+			}
 
 			return enteredBf;
 		}

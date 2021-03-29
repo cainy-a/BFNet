@@ -2,7 +2,8 @@
 {
 	public class InterpreterSettings
 	{
-		public bool   UseConsole = false;
-		public string Input      = string.Empty;
+		public bool   UseConsoleInput  = false;
+		public string Input            = string.Empty;
+		public bool   UseConsoleOutput = false;
 	}
 }
