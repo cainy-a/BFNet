@@ -48,7 +48,7 @@ namespace BFNet.Cli
 				UseConsole = string.IsNullOrWhiteSpace(input)
 			});
 
-			// interpret and also hide cursor because looks nice™
+			// interpret and also hide cursor because looks nice
 			Console.CursorVisible = false;
 			interpreter.StartInterpret();
 			Console.CursorVisible = true;
@@ -62,7 +62,7 @@ namespace BFNet.Cli
 			return CheckForFile()
 				? CheckArgsResult.File // see if its a file
 				: CheckForBrainFck()
-					? CheckArgsResult.BrainFck // if not is it possibly brainfuck?
+					? CheckArgsResult.BrainFck // if not is it possibly BrainF*ck?
 					: CheckArgsResult.None;    // nothing
 
 			bool CheckForFile() => File.Exists(args[0]) // file must exist
@@ -102,25 +102,11 @@ Press enter twice to exit and begin execution
 ";
 			Console.WriteLine(welcomeMsg);
 			
-			IList<string> lines         = new List<string>();
-			var           lastLineEmpty = false;
-			while (true)
-			{
-				// get line from user
-				var line = Console.ReadLine();
-				
-				// add to list
-				lines.Add(line);
-				
-				// if two consecutive empty lines exit
-				if (!string.IsNullOrWhiteSpace(line)) continue;
-				if (lastLineEmpty) break;
-				lastLineEmpty = true;
-			}
+			var userInput = FancyInput.GetInput(out lineCount);
 
-			lineCount = welcomeMsg.Split('\n').Length + lines.Count;
+			lineCount += welcomeMsg.Split('\n').Length;
 
-			return lines.Aggregate(string.Empty, (current, next) => current + '\n' + next);
+			return userInput;
 		}
 	}
 
