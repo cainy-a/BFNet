@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -14,9 +15,10 @@ namespace BFNet.Cli
 
 			var currentX = 0;
 			var currentY = 0;
-			
-			int LineLength() => input.ToString().Split('\n')[currentY].Length;
-			int LineCount()      => input.ToString().Split('\n').Length;
+
+			string[] Lines() => input.ToString().Split('\n');
+			int LineLength() => Lines()[currentY].Length;
+			int LineCount()  => Lines().Length;
 
 			while (true)
 			{
@@ -29,35 +31,31 @@ namespace BFNet.Cli
 				switch (key.Key)
 				{
 					case ConsoleKey.RightArrow:
-						if (currentX < LineLength())
+						if (currentX + 1 < LineLength())
 						{
 							currentX++;
-							Console.CursorLeft = Math.Min(currentX, LineLength());
+							Console.Out.Write(Lines()[currentY][currentX]);
 						}
-						else
+						else if (currentY + 1 < LineCount())
 						{
 							currentX           = 0;
-							Console.CursorLeft = Math.Min(currentX, LineLength());
 							Console.CursorTop++;
 							currentY++;
 						}
-
 						break;
 
 					case ConsoleKey.LeftArrow:
 						if (currentX > 0)
 						{
 							currentX--;
-							Console.CursorLeft = Math.Min(currentX, LineLength());
+							Console.Out.Write(Lines()[currentY][currentX]);
 						}
-						else
+						else if (currentY > 0)
 						{
 							currentY--;
 							Console.CursorTop--;
 							currentX           = LineLength() - 1;
-							Console.CursorLeft = Math.Min(currentX, LineLength());
 						}
-
 						break;
 
 					case ConsoleKey.DownArrow:
@@ -65,30 +63,33 @@ namespace BFNet.Cli
 						{
 							currentY++;
 							Console.CursorTop++;
-							Console.CursorLeft = Math.Min(currentX, LineLength());
 						}
-
 						break;
+					
 					case ConsoleKey.Backspace:
 						input.Remove(input.Length - 1, 1);
 						if (LineLength() > 0)
-						{
 							currentX--;
-						}
 						else
 						{
 							currentY--;
 							Console.CursorTop--;
 							currentX = LineLength() - 1;
 						}
-						Console.CursorLeft = Math.Min(currentX, LineLength());
+						break;
+					
+					case ConsoleKey.Enter:
+						input.Append('\n');
+						currentX = 0;
+						currentY++;
+						Console.CursorTop++;
 						break;
 					default:
 						input.Append(key.KeyChar);
 						currentX++;
-						Console.CursorLeft = Math.Min(currentX, LineLength());
 						break;
 				}
+				Console.CursorLeft = Math.Min(currentX, LineLength());
 				previousInputs.Add(key);
 			}
 
