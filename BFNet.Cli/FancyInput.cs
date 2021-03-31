@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -8,18 +7,17 @@ namespace BFNet.Cli
 {
 	internal static class FancyInput
 	{
-		public static string GetInput(out int lineCount)
+		public static string GetInput(out int lineCount, ConsoleColor defaultFg = ConsoleColor.White, ConsoleColor defaultbg = ConsoleColor.Black)
 		{
+			Console.ForegroundColor = defaultFg;
+			Console.BackgroundColor = defaultbg;
+			
 			var showCursor = true;
-			try
-			{
+			if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+#pragma warning disable CA1416
 				showCursor = Console.CursorVisible;
-			}
-			catch
-			{
-				// this only works on windows.
-			}
-			//Console.CursorVisible = false;
+#pragma warning restore CA1416
+			Console.CursorVisible = false;
 
 			var                   input          = new StringBuilder();
 			IList<ConsoleKeyInfo> previousInputs = new List<ConsoleKeyInfo>();
@@ -111,16 +109,19 @@ namespace BFNet.Cli
 		private static void ReRender(StringBuilder input, int currentX, int currentY)
 		{
 			var lines = input.ToString().Split('\n');
+			
+			var text = lines
+					  .Select(l => l + ' ') // add a space on each line for the cursor
+					  .Aggregate(string.Empty,  // start with nothing
+								 (current, next) => current + next + '\n'); // add lines with \n
 
 			var currentIndex = 0;
-			for (var i = 0; i + 1 < currentY; i++)
+			for (var i = 0; i < currentY; i++)
 			{
-				currentIndex += lines[currentY].Length // the line
-							  + 1;                     // the newline char
+				currentIndex += lines[i].Length // the line
+							  + 2;                     // the newline char and trailing space
 			}
-
-			var text = lines.Select(l => l + ' ').Aggregate(string.Empty, (current, next) => current + next + '\n');
-
+			
 			currentIndex += currentX; // account for x pos
 
 			var textBefore  = text[new Range(0, currentIndex)];
@@ -139,10 +140,19 @@ namespace BFNet.Cli
 			Console.BackgroundColor = fgCol;
 			Console.ForegroundColor = bgCol;
 			Console.Write(currentChar);
-			// text after
 			Console.BackgroundColor = bgCol;
 			Console.ForegroundColor = fgCol;
+			// text after
 			Console.Write(textAfter);
+
+			// still print cursor on empty lines!
+			Console.CursorLeft = 0;
+			if (lines[currentY].Length != 0) return;
+			Console.BackgroundColor = fgCol;
+			Console.ForegroundColor = bgCol;
+			Console.Write(' ');
+			Console.BackgroundColor = bgCol;
+			Console.ForegroundColor = fgCol;
 		}
 
 		private static void Clear(int lines)
