@@ -17,7 +17,7 @@ namespace BFNet.Cli
 #pragma warning disable CA1416
 				showCursor = Console.CursorVisible;
 #pragma warning restore CA1416
-			Console.CursorVisible = false;
+			//Console.CursorVisible = false;
 
 			var                   input          = new StringBuilder();
 			IList<ConsoleKeyInfo> previousInputs = new List<ConsoleKeyInfo>();
@@ -76,7 +76,6 @@ namespace BFNet.Cli
 						else
 						{
 							currentY--;
-							Console.CursorTop--;
 							currentX = LineLength() - 1;
 						}
 
@@ -96,7 +95,7 @@ namespace BFNet.Cli
 
 				previousInputs.Add(key);
 
-				Clear(LineCount());
+				Clear(LineCount(), currentY);
 				ReRender(input, currentX, currentY);
 			}
 
@@ -155,19 +154,21 @@ namespace BFNet.Cli
 			Console.ForegroundColor = fgCol;
 		}
 
-		private static void Clear(int lines)
+		private static void Clear(int lines, int currentY)
 		{
+			var yDiff = lines - (currentY + 1);
+			
 			Console.CursorTop  -= lines - 1;
 			Console.CursorLeft =  0;
 
-			for (var i = 0; i < lines; i++)
+			for (var i = 0; i <= lines; i++)
 			{
 				var sb = new StringBuilder();
-				for (var j = 0; j < Console.BufferWidth; j++) sb.Append(' ');
-				Console.Write(sb.ToString());
+				for (var j = 0; j < Console.WindowWidth - 2; j++) sb.Append(' ');
+				Console.WriteLine(sb.ToString());
 			}
 
-			Console.CursorTop  -= lines;
+			Console.CursorTop  -= lines + 1;
 			Console.CursorLeft =  0;
 		}
 	}
